@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         mGreetingTextView = findViewById(R.id.main_textview_greeting);
         mNameEditText = findViewById(R.id.main_edittext_name);
         mPlayButton = findViewById(R.id.main_button_play);
-        mPlayButton.setEnabled(false);
+        mPlayButton.setEnabled(false); //Désactive le bouton
         mNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -34,8 +35,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                mPlayButton.setEnabled(!editable.toString().isEmpty()); //attend que l'utilisateur tape au moins une lettre pour réactiver le bouton
             }
+        });
+
+        mPlayButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //L'utilisateur vient de cliquer
+            }
+
         });
     }
 }
