@@ -2,6 +2,7 @@ package com.example.topquiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 //L'utilisateur vient de cliquer
+                Intent gameActivityIntent = new Intent(MainActivity.this, GameActivity.class); //Prépare l'activité
+                startActivity(gameActivityIntent); //Lance l'activité
             }
 
         });
