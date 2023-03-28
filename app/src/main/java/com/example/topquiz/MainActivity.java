@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 
+import model.User;
+
 public class MainActivity extends AppCompatActivity {
     private TextView mGreetingTextView;
     private EditText mNameEditText;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         mNameEditText = findViewById(R.id.main_edittext_name);
         mPlayButton = findViewById(R.id.main_button_play);
         mPlayButton.setEnabled(false); //Désactive le bouton
+        User mUser = new User();
         mNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 //L'utilisateur vient de cliquer
+                mUser.setFirstName(mNameEditText.getText().toString());
                 Intent gameActivityIntent = new Intent(MainActivity.this, GameActivity.class); //Prépare l'activité
                 startActivity(gameActivityIntent); //Lance l'activité
             }
