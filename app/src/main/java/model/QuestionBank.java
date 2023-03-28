@@ -17,7 +17,7 @@ public class QuestionBank {
     public Question getCurrentQuestion(){
         return mQuestionList.get(mNextQuestionIndex);
     }
-    public Question getNextQuestionIndex() {
+    public Question getNextQuestion() {
         mNextQuestionIndex =(++mNextQuestionIndex)%mQuestionList.size();
         return getCurrentQuestion();
     }

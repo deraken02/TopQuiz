@@ -11,10 +11,10 @@ import java.util.Arrays;
 import model.Question;
 import model.QuestionBank;
 
-public class GameActivity extends AppCompaActivity {
+public class GameActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private Button  mButton1, mButton2, mButton3, mButton4;
-    private final QuestionBank QuestionBank = createQuestionBank();
+    private final QuestionBank mQuestionBank = createQuestionBank();
 
     private QuestionBank createQuestionBank()
     {
@@ -54,6 +54,14 @@ public class GameActivity extends AppCompaActivity {
         return new QuestionBank(Arrays.asList(question1,question2,question3));
     }
 
+    private void displayQuestion(final Question question)
+    {
+        mQuestionTextView.setText(question.getQuestion().toString());
+        mButton1.setText(question.getChoiceList().get(0));
+        mButton2.setText(question.getChoiceList().get(1));
+        mButton3.setText(question.getChoiceList().get(2));
+        mButton4.setText(question.getChoiceList().get(3));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,5 +71,6 @@ public class GameActivity extends AppCompaActivity {
         mButton2 = findViewById(R.id.game_activity_button_2);
         mButton3 = findViewById(R.id.game_activity_button_3);
         mButton4 = findViewById(R.id.game_activity_button_4);
+        displayQuestion(mQuestionBank.getCurrentQuestion());
     }
 }
