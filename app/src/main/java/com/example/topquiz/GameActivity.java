@@ -1,7 +1,10 @@
 package com.example.topquiz;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +20,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mQuestionTextView;
     private Button  mButton1, mButton2, mButton3, mButton4;
     private final QuestionBank mQuestionBank = createQuestionBank();
+    private int mRemainingQuestionCount, mScore;
+    public static final String BUNDLE_EXTRA_SCORE = "BUNDLE_EXTRA_SCORE";
 
     private QuestionBank createQuestionBank()
     {
@@ -72,6 +77,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mButton2 = findViewById(R.id.game_activity_button_2);
         mButton3 = findViewById(R.id.game_activity_button_3);
         mButton4 = findViewById(R.id.game_activity_button_4);
+        mRemainingQuestionCount = 3;
+        mScore = 0 ;
 
         mButton1.setOnClickListener(this);
         mButton2.setOnClickListener(this);
@@ -102,9 +109,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (mQuestionBank.getCurrentQuestion().getAnswerIndex() == index)
         {
             Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
+            mScore += 10;
+        } else {
+            Toast.makeText(this, "Faux!", Toast.LENGTH_SHORT).show();
+        }
+        mRemainingQuestionCount--;
+        if (mRemainingQuestionCount > 0)
+        {
+            displayQuestion(mQuestionBank.getNextQuestion());
         } else
         {
-            Toast.makeText(this, "Faux!", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Bien joué!").setMessage("Ton score est de "+ mScore).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent intent = new Intent();
+                    intent.putExtra(BUNDLE_EXTRA_SCORE, mScore);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            }).create().show();
         }
     }
 }

@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView mGreetingTextView;
     private EditText mNameEditText;
     private Button mPlayButton;
+    private static final int GAME_ACTIVITY_REQUEST_CODE = 42;
+    private static final String SHARED_PREF_USER_INFO = "SHARED_PREF_USER_INFO";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +51,20 @@ public class MainActivity extends AppCompatActivity {
                 //L'utilisateur vient de cliquer
                 mUser.setFirstName(mNameEditText.getText().toString());
                 Intent gameActivityIntent = new Intent(MainActivity.this, GameActivity.class); //Prépare l'activité
-                startActivity(gameActivityIntent); //Lance l'activité
+                //startActivity(gameActivityIntent); //Lance l'activité
+                startActivityForResult(gameActivityIntent, GAME_ACTIVITY_REQUEST_CODE);
             }
 
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GAME_ACTIVITY_REQUEST_CODE && RESULT_OK == resultCode)
+        {
+            int score =
+                    data.getIntExtra(GameActivity.BUNDLE_EXTRA_SCORE, 0);
+        }
     }
 }
