@@ -3,15 +3,17 @@ package com.example.topquiz;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
 import model.Question;
 import model.QuestionBank;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView mQuestionTextView;
     private Button  mButton1, mButton2, mButton3, mButton4;
     private final QuestionBank mQuestionBank = createQuestionBank();
@@ -53,7 +55,6 @@ public class GameActivity extends AppCompatActivity {
 
         return new QuestionBank(Arrays.asList(question1,question2,question3));
     }
-
     private void displayQuestion(final Question question)
     {
         mQuestionTextView.setText(question.getQuestion().toString());
@@ -71,6 +72,39 @@ public class GameActivity extends AppCompatActivity {
         mButton2 = findViewById(R.id.game_activity_button_2);
         mButton3 = findViewById(R.id.game_activity_button_3);
         mButton4 = findViewById(R.id.game_activity_button_4);
-        displayQuestion(mQuestionBank.getCurrentQuestion());
+
+        mButton1.setOnClickListener(this);
+        mButton2.setOnClickListener(this);
+        mButton3.setOnClickListener(this);
+        mButton4.setOnClickListener(this);
+        displayQuestion(mQuestionBank.getNextQuestion());
+    }
+    @Override
+    public void onClick(View view) {
+        int index;
+
+        if( view == mButton1)
+        {
+            index = 0;
+        } else if (view == mButton2)
+        {
+            index = 1;
+        } else if (view == mButton3)
+        {
+            index = 2;
+        } else if (view == mButton4)
+        {
+            index = 3;
+        } else
+        {
+            throw new IllegalStateException("Unknown clicked view : "+ view);
+        }
+        if (mQuestionBank.getCurrentQuestion().getAnswerIndex() == index)
+        {
+            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
+        } else
+        {
+            Toast.makeText(this, "Faux!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
