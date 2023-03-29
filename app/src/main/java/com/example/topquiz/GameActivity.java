@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +24,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private final QuestionBank mQuestionBank = createQuestionBank();
     private int mRemainingQuestionCount, mScore;
     public static final String BUNDLE_EXTRA_SCORE = "BUNDLE_EXTRA_SCORE";
+    private boolean mEnableTouchEvents;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return mEnableTouchEvents && super.dispatchTouchEvent(ev);
+    }
 
     private QuestionBank createQuestionBank()
     {
@@ -85,6 +93,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mButton3.setOnClickListener(this);
         mButton4.setOnClickListener(this);
         displayQuestion(mQuestionBank.getNextQuestion());
+
+        mEnableTouchEvents = true;
     }
     @Override
     public void onClick(View view) {
@@ -113,22 +123,35 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Toast.makeText(this, "Faux!", Toast.LENGTH_SHORT).show();
         }
-        mRemainingQuestionCount--;
-        if (mRemainingQuestionCount > 0)
-        {
-            displayQuestion(mQuestionBank.getNextQuestion());
-        } else
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Bien joué!").setMessage("Ton score est de "+ mScore).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Intent intent = new Intent();
-                    intent.putExtra(BUNDLE_EXTRA_SCORE, mScore);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-            }).create().show();
-        }
+
+        mEnableTouchEvents = false;
+        new Handler().postDelayed(new Runnable() {
+              @Override
+              public void run() {
+                  mRemainingQuestionCount--;
+                  if (mRemainingQuestionCount > 0)
+                  {
+                      displayQuestion(mQuestionBank.getNextQuestion());
+                  } else
+                  {
+                      endGame();
+                  }
+                  mEnableTouchEvents = true;
+              }
+          }, 1000); //Ajoute un délai après avoir donné une réponses
+    }
+
+    private void endGame()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Bien joué!").setMessage("Ton score est de "+ mScore).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent();
+                intent.putExtra(BUNDLE_EXTRA_SCORE, mScore);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }).create().show();
     }
 }
