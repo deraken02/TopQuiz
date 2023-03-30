@@ -1,5 +1,6 @@
 package com.example.topquiz;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +25,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private final QuestionBank mQuestionBank = createQuestionBank();
     private int mRemainingQuestionCount, mScore;
     public static final String BUNDLE_EXTRA_SCORE = "BUNDLE_EXTRA_SCORE";
+    public static final String BUNDLE_STATE_SCORE = "BUNDLE_STATE_SCORE", BUNDLE_STATE_QUESTION = "BUNDLE_STATE_QUESTION";
     private boolean mEnableTouchEvents;
 
     @Override
@@ -85,8 +87,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mButton2 = findViewById(R.id.game_activity_button_2);
         mButton3 = findViewById(R.id.game_activity_button_3);
         mButton4 = findViewById(R.id.game_activity_button_4);
-        mRemainingQuestionCount = 3;
-        mScore = 0 ;
+        if(savedInstanceState != null) {
+            mRemainingQuestionCount = savedInstanceState.getInt(BUNDLE_STATE_QUESTION);
+            mScore = savedInstanceState.getInt(BUNDLE_STATE_SCORE);
+        } else {
+            mRemainingQuestionCount = 3;
+            mScore = 0;
+        }
 
         mButton1.setOnClickListener(this);
         mButton2.setOnClickListener(this);
@@ -153,5 +160,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
             }
         }).create().show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUNDLE_STATE_SCORE, mScore);
+        outState.putInt(BUNDLE_STATE_QUESTION, mRemainingQuestionCount);
     }
 }
